@@ -287,42 +287,44 @@ Terminate the instance when finished to avoid charges.
 | [`c0c25d7`](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/commit/c0c25d7) | *Import LAB06 webframework as the baseline for the extension*. Sequential server, unchanged. |
 | [`742b0f4`](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/commit/742b0f4) | *Implement concurrent request handling and graceful shutdown*. Worker pool, shutdown hook, Java 21, Docker, tests. |
 
-The diff between the two commits shows exactly what the extension changed in the framework.
+The [diff between the two commits](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/compare/c0c25d7...742b0f4) shows exactly what the extension changed in the framework.
 
 ### Local execution and tests
 
 | # | Description | Screenshot |
 |---|---|---|
-| 1 | `mvn clean package`: all tests pass, including `HttpServerTest` | |
-| 2 | `/greeting?name=Pedro` responding `Hello, Pedro!` | |
-| 3 | Concurrency: three `/slow` requests finish in ~3 s on different `worker-N` threads | |
-| 4 | Graceful shutdown with Ctrl+C: in-flight request answered, drain log | |
+| 1 | `mvn clean package`: all tests pass, including `HttpServerTest` | <img width="1481" height="320" alt="mvn clean package with all tests passing" src="https://github.com/user-attachments/assets/bdcb5ddb-c572-4a20-b915-84e444e42cbb" /> |
+| 2 | `/greeting?name=Pedro` responding `Hello, Pedro!` | <img width="580" height="181" alt="Greeting endpoint running locally" src="https://github.com/user-attachments/assets/13273cfa-b529-4de5-b3e2-aed3fc071954" /> |
+| 3 | Concurrency: three `/slow` requests finish in ~3 s on different `worker-N` threads | <img width="1305" height="245" alt="Three slow requests served in parallel" src="https://github.com/user-attachments/assets/eb5f55db-e1db-41ae-92ad-faf5d282e698" /> |
+| 4 | Graceful shutdown with Ctrl+C (PowerShell): in-flight request answered, drain log | <img width="1270" height="148" alt="Local graceful shutdown log" src="https://github.com/user-attachments/assets/59000842-d88e-48b5-864c-92dbb970a35c" /> |
 
 ### Docker
 
 | # | Description | Screenshot |
 |---|---|---|
-| 5 | `docker build` and `docker images` | |
-| 6 | `docker run` + `docker ps` + `/greeting?name=Container` | |
-| 7 | `docker stop` during an in-flight `/slow` request + `docker logs` showing the drain | |
-| 8 | `docker compose up -d --build` + response on port `8088` | |
+| 5 | `docker build` and `docker images` | <img width="1412" height="174" alt="Docker build and images" src="https://github.com/user-attachments/assets/f0d16f5c-31ee-43ca-8359-a37ab196dc8f" /> |
+| 6 | Container running: `/greeting?name=Container` | <img width="563" height="152" alt="Greeting endpoint from the container" src="https://github.com/user-attachments/assets/5c1469f8-acf9-4ee7-aa35-4b5dbfcf6cc4" /> |
+| 7 | `docker stop` during an in-flight `/slow` request: the request is answered and `docker logs` shows the drain | <img width="1279" height="302" alt="docker stop and drain logs" src="https://github.com/user-attachments/assets/6d921638-8dd8-4cad-8c48-c4d527a1275f" /><br><img width="1419" height="87" alt="In-flight request answered during docker stop" src="https://github.com/user-attachments/assets/46b5c94f-6159-4d6d-9d73-cc2811efc729" /> |
+| 8 | `docker compose up -d --build` and the service on port `8088` | <img width="1759" height="139" alt="Docker Compose service running" src="https://github.com/user-attachments/assets/d974f0eb-bf35-4fe2-8114-c74f66985626" /> |
 
 ### Docker Hub
 
 | # | Description | Screenshot |
 |---|---|---|
-| 9 | Push of the `1.0` and `latest` tags | |
-| 10 | Repository page on Docker Hub showing both tags | |
+| 9 | Push of the `1.0` and `latest` tags | <img width="1569" height="300" alt="Push of both tags to Docker Hub" src="https://github.com/user-attachments/assets/849607d6-fa50-4dff-91e2-3a769f51238a" /> |
+| 10 | Repository page on Docker Hub showing both tags | <img width="538" height="282" alt="Docker Hub repository tags" src="https://github.com/user-attachments/assets/48389a3c-6809-4531-a220-8162c0152fa2" /> |
 
 ## Completed cloud deployment evidence
 
+The same Docker Hub image was deployed on an Amazon Linux 2023 EC2 instance and verified through its public IPv4 address (`100.48.193.45`).
+
 | # | Description | Screenshot |
 |---|---|---|
-| 11 | SSH connection to the EC2 instance | |
-| 12 | `docker pull joshq10/micro-http-framework:1.0` on EC2 | |
-| 13 | Container running on EC2 (`docker ps`, `docker logs`) | |
-| 14 | Browser response from the public URL: `Hello, AWS!` | |
-| 15 | Graceful shutdown on EC2 (`docker stop` + `docker logs`) | |
+| 11 | SSH connection to the EC2 instance | <img width="2144" height="467" alt="SSH session on the EC2 instance" src="https://github.com/user-attachments/assets/c8977f46-5601-4edc-a79a-1e9332665697" /> |
+| 12 | `docker pull joshq10/micro-http-framework:1.0` on EC2 | <img width="792" height="190" alt="docker pull on EC2" src="https://github.com/user-attachments/assets/da5f7a48-e43d-478e-80ff-578b378fc677" /> |
+| 13 | Container running on EC2 (`docker ps`, `docker logs`) | <img width="1285" height="151" alt="docker ps and docker logs on EC2" src="https://github.com/user-attachments/assets/93b10c27-a03f-4c9b-afc2-847a3e937bf7" /> |
+| 14 | Browser response from the public URL: `Hello, AWS!` | <img width="784" height="205" alt="Hello AWS from the public URL" src="https://github.com/user-attachments/assets/02a0f1a1-93a0-4f33-abf5-a923e48c9be6" /> |
+| 15 | Graceful shutdown on EC2: in-flight request answered, then `docker stop` + `docker logs` | <img width="342" height="50" alt="In-flight request answered on EC2" src="https://github.com/user-attachments/assets/2c9e9f29-a59c-4b95-add8-6c43564c29c8" /><br><img width="1311" height="261" alt="docker stop and drain logs on EC2" src="https://github.com/user-attachments/assets/ef2e15d9-6206-4d2c-a24c-b229a7266a0a" /> |
 
 ## Deliverables checklist
 
@@ -333,23 +335,6 @@ The diff between the two commits shows exactly what the extension changed in the
 - [x] Dockerfile and compose.yaml
 - [x] Docker Hub repository URL
 - [x] Meaningful commits showing the extension (baseline → extension)
-- [ ] Screenshots of local and Docker execution
-- [ ] Evidence of the EC2 deployment
+- [x] Screenshots of local and Docker execution
+- [x] Evidence of the EC2 deployment
 - [x] Public deployment URL
-- [ ] Demo video (local Docker + EC2)
-
-mvn clean package: <img width="1481" height="320" alt="image" src="https://github.com/user-attachments/assets/bdcb5ddb-c572-4a20-b915-84e444e42cbb" />
-captura 2: greeting en T1: <img width="580" height="181" alt="image" src="https://github.com/user-attachments/assets/13273cfa-b529-4de5-b3e2-aed3fc071954" />
-captura 3, concurrencia: <img width="1305" height="245" alt="image" src="https://github.com/user-attachments/assets/eb5f55db-e1db-41ae-92ad-faf5d282e698" />
-captura 4, proceso terminado powershell: <img width="1270" height="148" alt="image" src="https://github.com/user-attachments/assets/59000842-d88e-48b5-864c-92dbb970a35c" />
-captura 5 docker build: <img width="1412" height="174" alt="image" src="https://github.com/user-attachments/assets/f0d16f5c-31ee-43ca-8359-a37ab196dc8f" />
-captura 6, greeting container: <img width="563" height="152" alt="image" src="https://github.com/user-attachments/assets/5c1469f8-acf9-4ee7-aa35-4b5dbfcf6cc4" />
-captura 7, shutdown: <img width="1279" height="302" alt="image" src="https://github.com/user-attachments/assets/6d921638-8dd8-4cad-8c48-c4d527a1275f" />, <img width="1419" height="87" alt="image" src="https://github.com/user-attachments/assets/46b5c94f-6159-4d6d-9d73-cc2811efc729" />
-captura 8, docker compose T1: <img width="1759" height="139" alt="image" src="https://github.com/user-attachments/assets/d974f0eb-bf35-4fe2-8114-c74f66985626" />
-captura 9, push de los dos containers: <img width="1569" height="300" alt="image" src="https://github.com/user-attachments/assets/849607d6-fa50-4dff-91e2-3a769f51238a" />
-captura 10, contenedores docker: <img width="538" height="282" alt="image" src="https://github.com/user-attachments/assets/48389a3c-6809-4531-a220-8162c0152fa2" />
-captura 11: ssh funcional: <img width="2144" height="467" alt="image" src="https://github.com/user-attachments/assets/c8977f46-5601-4edc-a79a-1e9332665697" />
-captura 12, docker pull: <img width="792" height="190" alt="image" src="https://github.com/user-attachments/assets/da5f7a48-e43d-478e-80ff-578b378fc677" />
-captura 13, docker ps y logs: <img width="1285" height="151" alt="image" src="https://github.com/user-attachments/assets/93b10c27-a03f-4c9b-afc2-847a3e937bf7" />
-captura 14, pagina funcional: <img width="784" height="205" alt="image" src="https://github.com/user-attachments/assets/02a0f1a1-93a0-4f33-abf5-a923e48c9be6" />
-captura 15, apagado controlado en EC2: <img width="342" height="50" alt="image" src="https://github.com/user-attachments/assets/2c9e9f29-a59c-4b95-add8-6c43564c29c8" />, <img width="1311" height="261" alt="image" src="https://github.com/user-attachments/assets/ef2e15d9-6206-4d2c-a24c-b229a7266a0a" />
