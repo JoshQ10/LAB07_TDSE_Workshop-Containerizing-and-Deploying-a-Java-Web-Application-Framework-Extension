@@ -237,7 +237,7 @@ Published tags: `1.0` and `latest` (image digest `sha256:726cba4fe2d3…`).
 3. Connect and install Docker:
 
 ```bash
-ssh -i labsuser.pem ec2-user@<ec2-public-dns>
+ssh -i labsuser.pem ec2-user@<ec2-public-ip>
 
 sudo yum update -y
 sudo yum install -y docker
@@ -263,14 +263,20 @@ docker ps
 docker logs webframework
 ```
 
-5. Verify from a browser: `http://<ec2-public-dns>:8080/greeting?name=AWS`, which returns `Hello, AWS!`.
+5. Verify from a browser: `http://<ec2-public-ip>:8080/greeting?name=AWS`, which returns `Hello, AWS!`.
 6. Graceful shutdown on EC2: `docker stop webframework && docker logs webframework`.
 
 Terminate the instance when finished to avoid charges.
 
-**Public deployment URL:**
+**Public deployment URL:** http://100.48.193.45:8080/greeting?name=AWS
 
+| Endpoint | URL |
+|---|---|
+| Greeting | http://100.48.193.45:8080/greeting?name=AWS |
+| Static page | http://100.48.193.45:8080/ |
+| Concurrency demo | http://100.48.193.45:8080/slow?seconds=3 |
 
+> The instance runs in an AWS Academy lab, so it is stopped when the lab session ends and its public IPv4 address may change after a restart.
 
 ## Evidence of progress
 
@@ -329,5 +335,5 @@ The diff between the two commits shows exactly what the extension changed in the
 - [x] Meaningful commits showing the extension (baseline → extension)
 - [ ] Screenshots of local and Docker execution
 - [ ] Evidence of the EC2 deployment
-- [ ] Public deployment URL
+- [x] Public deployment URL
 - [ ] Demo video (local Docker + EC2)
