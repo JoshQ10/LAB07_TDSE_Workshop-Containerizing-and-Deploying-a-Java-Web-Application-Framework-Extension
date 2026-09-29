@@ -10,49 +10,133 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The accept loop. Handles exactly one connection at a time: read the
- * request line, resolve it against the router or the static-file
- * service, write one response, close the socket, accept the next one.
- * Registering a route never requires touching this class.
+ * The accept loop. The calling thread only accepts connections; each
+ * accepted socket is handed to a fixed-size worker pool, so several
+ * clients are served in parallel. Stopping closes the listening socket
+ * (no new connections) and then drains the pool so in-flight requests
+ * still receive their response. Registering a route never requires
+ * touching this class.
  */
 public class HttpServer {
 
+    private static final int READ_TIMEOUT_MILLIS = 10_000;
+
     private final Router router;
     private final StaticFileService staticFileService;
+    private final int poolSize;
+    private final long shutdownTimeoutSeconds;
+    private final CountDownLatch terminated = new CountDownLatch(1);
     private volatile boolean running = false;
+    private volatile ServerSocket serverSocket;
 
     public HttpServer(Router router, StaticFileService staticFileService) {
-        this.router = router;
-        this.staticFileService = staticFileService;
+        this(router, staticFileService, 10, 8);
     }
 
+    public HttpServer(Router router, StaticFileService staticFileService, int poolSize, long shutdownTimeoutSeconds) {
+        this.router = router;
+        this.staticFileService = staticFileService;
+        this.poolSize = poolSize;
+        this.shutdownTimeoutSeconds = shutdownTimeoutSeconds;
+    }
+
+    /** Blocks accepting connections until {@link #stop()} is called, then drains the worker pool. */
     public void start(int port) throws IOException {
-        running = true;
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server listening on port " + port);
+        ExecutorService workers = Executors.newFixedThreadPool(poolSize, workerThreadFactory());
+        try {
+            serverSocket = new ServerSocket(port);
+            running = true;
+            System.out.println("Server listening on port " + port + " with " + poolSize + " worker threads");
             while (running) {
+                Socket clientSocket;
                 try {
-                    Socket clientSocket = serverSocket.accept();
-                    try {
-                        handleConnection(clientSocket);
-                    } finally {
-                        clientSocket.close();
-                    }
+                    clientSocket = serverSocket.accept();
                 } catch (IOException e) {
                     if (running) {
-                        System.err.println("Error handling connection: " + e.getMessage());
+                        System.err.println("Error accepting connection: " + e.getMessage());
                     }
+                    continue;
                 }
+                workers.execute(() -> serve(clientSocket));
             }
+        } finally {
+            running = false;
+            closeListeningSocket();
+            drain(workers);
+            terminated.countDown();
+        }
+    }
+
+    /**
+     * Stops accepting new connections. Requests already being handled
+     * still complete; {@link #start(int)} returns once they have. Safe to
+     * call from a route handler, from another thread or from a JVM
+     * shutdown hook, and more than once.
+     */
+    public void stop() {
+        if (running) {
+            System.out.println("Shutting down: closing listening socket and draining worker pool...");
+        }
+        running = false;
+        closeListeningSocket();
+    }
+
+    /** Waits until the server has fully stopped (pool drained). Returns false on timeout. */
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        return terminated.await(timeout, unit);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    private void closeListeningSocket() {
+        ServerSocket socket = serverSocket;
+        if (socket != null && !socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.err.println("Error closing listening socket: " + e.getMessage());
+            }
+        }
+    }
+
+    private void drain(ExecutorService workers) {
+        workers.shutdown();
+        try {
+            if (workers.awaitTermination(shutdownTimeoutSeconds, TimeUnit.SECONDS)) {
+                System.out.println("Worker pool drained cleanly.");
+            } else {
+                System.err.println("Timed out after " + shutdownTimeoutSeconds + "s; interrupting remaining requests.");
+                workers.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            workers.shutdownNow();
+            Thread.currentThread().interrupt();
         }
         System.out.println("Server stopped gracefully.");
     }
 
-    /** Marks the server as no longer running; the current request still completes normally. */
-    public void stop() {
-        running = false;
+    private void serve(Socket clientSocket) {
+        try (clientSocket) {
+            clientSocket.setSoTimeout(READ_TIMEOUT_MILLIS);
+            handleConnection(clientSocket);
+        } catch (IOException e) {
+            System.err.println("Error handling connection: " + e.getMessage());
+        }
+    }
+
+    private static ThreadFactory workerThreadFactory() {
+        AtomicInteger counter = new AtomicInteger(1);
+        return runnable -> new Thread(runnable, "worker-" + counter.getAndIncrement());
     }
 
     private void handleConnection(Socket clientSocket) throws IOException {

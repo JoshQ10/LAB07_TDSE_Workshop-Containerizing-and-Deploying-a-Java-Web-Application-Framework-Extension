@@ -1,15 +1,16 @@
 package co.edu.escuelaing.webframework;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Maps a request path to the lambda registered for it. Adding a route
- * only touches this map — never the server's connection loop.
+ * only touches this map — never the server's connection loop. The map
+ * is concurrent because worker threads read it in parallel.
  */
 public class Router {
 
-    private final Map<String, GetService> getRoutes = new HashMap<>();
+    private final Map<String, GetService> getRoutes = new ConcurrentHashMap<>();
 
     public void addGetRoute(String path, GetService service) {
         getRoutes.put(path, service);

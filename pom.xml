@@ -5,19 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>co.edu.escuelaing</groupId>
-    <artifactId>lab06-webframework</artifactId>
-    <version>1.0.0</version>
+    <artifactId>webframework</artifactId>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
-    <name>lab06-webframework</name>
+    <name>webframework</name>
     <description>
-        A small, sequential Java application server: a lightweight web
-        framework that serves static resources and lets an application
-        register GET routes through lambda functions.
+        A small Java application server built on ServerSocket: serves
+        static resources, registers GET routes through lambda functions,
+        handles requests concurrently with a worker pool and shuts down
+        gracefully on SIGTERM.
     </description>
 
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
         <exec.mainClass>co.edu.escuelaing.app.Application</exec.mainClass>
