@@ -1,0 +1,102 @@
+:root {
+    --primary: #2e86de;
+    --primary-dark: #1b4f9c;
+    --bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+header .logo {
+    width: 160px;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+header h1 {
+    margin: 8px 0 4px;
+}
+
+header .subtitle {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+main {
+    max-width: 640px;
+    margin: 24px auto;
+    padding: 0 16px;
+    display: grid;
+    gap: 16px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.card code {
+    background: #eef1f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+input[type="text"] {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 0 8px 0 4px;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+button:hover {
+    background: var(--primary-dark);
+}
+
+.result {
+    margin-top: 12px;
+    font-weight: 600;
+    min-height: 1.2em;
+}
+
+footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: #888;
+    font-size: 0.85rem;
+}

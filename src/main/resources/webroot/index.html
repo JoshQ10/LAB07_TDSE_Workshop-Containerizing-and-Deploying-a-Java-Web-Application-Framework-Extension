@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab06 Web Framework</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <img src="/images/logo.png" alt="Logo del framework" class="logo">
+        <h1>Mini Web Framework</h1>
+        <p class="subtitle">Servidor HTTP secuencial con rutas registradas mediante lambdas</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Saludo dinámico</h2>
+            <p><code>GET /hello?name=...</code></p>
+            <label for="name">Tu nombre:</label>
+            <input type="text" id="name" placeholder="Escribe tu nombre">
+            <button onclick="greet()">Saludar</button>
+            <p id="result" class="result"></p>
+        </section>
+
+        <section class="card">
+            <h2>Valor de Pi</h2>
+            <p><code>GET /pi</code></p>
+            <button onclick="getPi()">Obtener Pi</button>
+            <p id="pi-result" class="result"></p>
+        </section>
+
+        <section class="card">
+            <h2>Fecha y hora del servidor</h2>
+            <p><code>GET /date</code></p>
+            <button onclick="getDate()">Obtener fecha</button>
+            <p id="date-result" class="result"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>LAB06 &mdash; TDSE &mdash; Building and Deploying a Maintainable Application Server</p>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>
