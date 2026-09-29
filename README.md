@@ -337,3 +337,19 @@ The diff between the two commits shows exactly what the extension changed in the
 - [ ] Evidence of the EC2 deployment
 - [x] Public deployment URL
 - [ ] Demo video (local Docker + EC2)
+
+mvn clean package: <img width="1481" height="320" alt="image" src="https://github.com/user-attachments/assets/bdcb5ddb-c572-4a20-b915-84e444e42cbb" />
+captura 2: greeting en T1: <img width="580" height="181" alt="image" src="https://github.com/user-attachments/assets/13273cfa-b529-4de5-b3e2-aed3fc071954" />
+captura 3, concurrencia: <img width="1305" height="245" alt="image" src="https://github.com/user-attachments/assets/eb5f55db-e1db-41ae-92ad-faf5d282e698" />
+captura 4, proceso terminado powershell: <img width="1270" height="148" alt="image" src="https://github.com/user-attachments/assets/59000842-d88e-48b5-864c-92dbb970a35c" />
+captura 5 docker build: <img width="1412" height="174" alt="image" src="https://github.com/user-attachments/assets/f0d16f5c-31ee-43ca-8359-a37ab196dc8f" />
+captura 6, greeting container: <img width="563" height="152" alt="image" src="https://github.com/user-attachments/assets/5c1469f8-acf9-4ee7-aa35-4b5dbfcf6cc4" />
+captura 7, shutdown: <img width="1279" height="302" alt="image" src="https://github.com/user-attachments/assets/6d921638-8dd8-4cad-8c48-c4d527a1275f" />, <img width="1419" height="87" alt="image" src="https://github.com/user-attachments/assets/46b5c94f-6159-4d6d-9d73-cc2811efc729" />
+captura 8, docker compose T1: <img width="1759" height="139" alt="image" src="https://github.com/user-attachments/assets/d974f0eb-bf35-4fe2-8114-c74f66985626" />
+captura 9, push de los dos containers: <img width="1569" height="300" alt="image" src="https://github.com/user-attachments/assets/849607d6-fa50-4dff-91e2-3a769f51238a" />
+captura 10, contenedores docker: <img width="538" height="282" alt="image" src="https://github.com/user-attachments/assets/48389a3c-6809-4531-a220-8162c0152fa2" />
+captura 11: ssh funcional: <img width="2144" height="467" alt="image" src="https://github.com/user-attachments/assets/c8977f46-5601-4edc-a79a-1e9332665697" />
+captura 12, docker pull: <img width="792" height="190" alt="image" src="https://github.com/user-attachments/assets/da5f7a48-e43d-478e-80ff-578b378fc677" />
+captura 13, docker ps y logs: <img width="1285" height="151" alt="image" src="https://github.com/user-attachments/assets/93b10c27-a03f-4c9b-afc2-847a3e937bf7" />
+captura 14, pagina funcional: <img width="784" height="205" alt="image" src="https://github.com/user-attachments/assets/02a0f1a1-93a0-4f33-abf5-a923e48c9be6" />
+captura 15, apagado controlado en EC2: <img width="342" height="50" alt="image" src="https://github.com/user-attachments/assets/2c9e9f29-a59c-4b95-add8-6c43564c29c8" />, <img width="1311" height="261" alt="image" src="https://github.com/user-attachments/assets/ef2e15d9-6206-4d2c-a24c-b229a7266a0a" />
