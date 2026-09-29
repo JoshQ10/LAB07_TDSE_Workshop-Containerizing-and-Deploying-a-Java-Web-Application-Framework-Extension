@@ -279,7 +279,7 @@ Terminate the instance when finished to avoid charges.
 | Commit | Description |
 |---|---|
 | [`c0c25d7`](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/commit/c0c25d7) | *Import LAB06 webframework as the baseline for the extension*. Sequential server, unchanged. |
-| See the next commit in the [history](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/commits/main) | *Implement concurrent request handling and graceful shutdown*. Worker pool, shutdown hook, Java 21, Docker, tests. |
+| [`742b0f4`](https://github.com/JoshQ10/LAB07_TDSE_Workshop-Containerizing-and-Deploying-a-Java-Web-Application-Framework-Extension/commit/742b0f4) | *Implement concurrent request handling and graceful shutdown*. Worker pool, shutdown hook, Java 21, Docker, tests. |
 
 The diff between the two commits shows exactly what the extension changed in the framework.
 
